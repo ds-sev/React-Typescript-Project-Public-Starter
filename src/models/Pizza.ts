@@ -1,5 +1,3 @@
-
-
 type Pizza = {
   id: number,
   title: string,

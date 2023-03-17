@@ -4,14 +4,22 @@ import AddPizzaForm from './components/AddPizzaForm'
 import Pizza from './models/Pizza'
 import DisplayPizzas from './components/DisplayPizzas'
 
-
 const App: FC = () => {
 
   const [pizzasList, setPizzasList] = useState<Pizza[]>([])
 
-
   const addPizza = (newPizza: Pizza) => {
     setPizzasList([...pizzasList, newPizza])
+  }
+
+  const updatePizza = (newPizza: Pizza) => {
+    setPizzasList(pizzasList.map((pizza) =>
+      (pizza.id === newPizza.id ? newPizza : pizza)))
+  }
+
+  const deletePizza = (id: number) => {
+    const newPizzasList = pizzasList.filter(pizza => pizza.id !== id)
+    setPizzasList(newPizzasList)
   }
 
   console.log('pizzaslist >>>', pizzasList)
@@ -21,10 +29,12 @@ const App: FC = () => {
       <div className="wrap">
         <span className="heading">Наша пиццерия</span>
         <AddPizzaForm
-        addPizza={addPizza}
+          addPizza={addPizza}
         />
         <DisplayPizzas
           pizzasList={pizzasList}
+          deletePizza={deletePizza}
+          updatePizza={updatePizza}
         />
       </div>
     </div>

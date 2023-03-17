@@ -2,75 +2,68 @@ import React, { ChangeEvent, FC, FormEvent, useState } from 'react'
 import './styles.css'
 import Pizza from '../models/Pizza'
 
-interface addPizzaFormProps {
-  addPizza: (newPizza: Pizza) => void
+interface EditPizzaFormProps {
+  data: Pizza
+  updatePizza: (newPizza: Pizza) => void
+  handleToggleEdit: () => void
 }
 
-const initState = {
-  title: '',
-  price: '',
-  img: ''
-}
+const EditPizzaForm: FC<EditPizzaFormProps> = ({data, updatePizza, handleToggleEdit}) => {
 
-const AddPizzaForm: FC<addPizzaFormProps> = ({addPizza}) => {
-
-  const [newPizza, setNewPizza] =
-    useState<{ title: string, price: string, img: string }>(initState)
+  const [editPizza, setEditPizza] =
+    useState<Pizza>(data)
 
   const handleChange = (evt: ChangeEvent<HTMLInputElement>) => {
     const {name, value} = evt.target
 
-    setNewPizza({
-      ...newPizza,
+    setEditPizza({
+      ...editPizza,
       [name]: value
     })
   }
 
   const handleSubmit = (evt: FormEvent<HTMLFormElement>) => {
     evt.preventDefault()
-    const {title, price, img} = newPizza
+    const {title, price, img} = editPizza
 
     if (title && price && img) {
-      addPizza({
-        title,
-        img,
-        price: Number(price),
-        id: Date.now()
-      })
-      setNewPizza(initState)
+      updatePizza(editPizza)
+      handleToggleEdit()
     }
   }
 
-  console.log('new pizza >>>', newPizza)
+  console.log('edit pizza >>>', editPizza)
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form
+      className="edit-form"
+      onSubmit={handleSubmit}>
       <input
         name="title"
         type="text"
         placeholder="Название"
         onChange={handleChange}
-        value={newPizza.title}
+        value={editPizza.title}
       />
       <input
         name="price"
         type="text"
         placeholder="Стоимость"
         onChange={handleChange}
-        value={newPizza.price}
+        value={editPizza.price}
       />
       <input
         name="img"
         type="text"
         placeholder="Изображение"
         onChange={handleChange}
-        value={newPizza.img}
+        value={editPizza.img}
       />
       <button type="submit">
-        + Добавить в меню
+        Подтвердить
       </button>
     </form>
   )
 }
 
-export default AddPizzaForm
+export default EditPizzaForm
